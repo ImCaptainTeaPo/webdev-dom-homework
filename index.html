@@ -90,34 +90,60 @@
         return;
       }
   
-      const newComment = `
-        <li class="comment">
-          <div class="comment-header">
-            <div>${name}</div>
-            <div>${getCurrentDateTime()}</div>
+      const newComment = document.createElement("li");
+      newComment.classList.add("comment");
+      newComment.innerHTML = `
+        <div class="comment-header">
+          <div>${name}</div>
+          <div>${getCurrentDateTime()}</div>
+        </div>
+        <div class="comment-body">
+          <div class="comment-text">
+            ${commentText}
           </div>
-          <div class="comment-body">
-            <div class="comment-text">
-              ${commentText}
-            </div>
+        </div>
+        <div class="comment-footer">
+          <div class="likes">
+            <span class="likes-counter">0</span>
+            <button class="like-button"></button>
           </div>
-          <div class="comment-footer">
-            <div class="likes">
-              <span class="likes-counter">0</span>
-              <button class="like-button"></button>
-            </div>
-          </div>
-        </li>
+        </div>
       `;
   
-      commentsList.innerHTML += newComment;
+      commentsList.appendChild(newComment);
   
       nameInput.value = "";
       commentInput.value = "";
+  
+      // Обновление лайков
+      updateLikeButtons();
     }
   
     addButton.addEventListener("click", addComment);
+  
+    // Функция для лайков
+    function updateLikeButtons() {
+      const likeButtons = document.querySelectorAll(".like-button");
+  
+      likeButtons.forEach((button) => {
+        button.onclick = () => {
+          const counter = button.previousElementSibling;
+          let likes = parseInt(counter.textContent);
+  
+          if (button.classList.contains("-active-like")) {
+            likes--;
+            button.classList.remove("-active-like");
+          } else {
+            likes++;
+            button.classList.add("-active-like");
+          }
+  
+          counter.textContent = likes;
+        };
+      });
+    }
+  
+    updateLikeButtons();
 
-    console.log("It works!");
-  </script>  
+  </script>
 </html>
