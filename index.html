@@ -98,6 +98,15 @@
       return `${day}.${month}.${year} ${hours}:${minutes}`;
     }
   
+    function sanitizeInput(input) {
+      return input
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+    }
+  
     function renderComments() {
       commentsList.innerHTML = "";
   
@@ -106,11 +115,11 @@
         commentElement.classList.add("comment");
         commentElement.innerHTML = `
           <div class="comment-header">
-            <div>${comment.name}</div>
+            <div>${sanitizeInput(comment.name)}</div>
             <div>${comment.date}</div>
           </div>
           <div class="comment-body">
-            <div class="comment-text">${comment.text}</div>
+            <div class="comment-text">${sanitizeInput(comment.text)}</div>
           </div>
           <div class="comment-footer">
             <div class="likes">
@@ -123,14 +132,23 @@
         `;
   
         commentsList.appendChild(commentElement);
+  
+        commentElement.addEventListener("click", (event) => {
+          if (!event.target.classList.contains("like-button")) {
+            nameInput.value = comment.name;
+            commentInput.value = `> ${comment.text}\n`;
+          }
+        });
       });
   
       setLikeHandlers();
     }
-  
+
     function setLikeHandlers() {
       document.querySelectorAll(".like-button").forEach((button) => {
-        button.addEventListener("click", () => {
+        button.addEventListener("click", (event) => {
+          event.stopPropagation();
+  
           const index = button.getAttribute("data-index");
           comments[index].isLiked = !comments[index].isLiked;
           comments[index].likes += comments[index].isLiked ? 1 : -1;
@@ -141,8 +159,8 @@
     }
   
     function addComment() {
-      const name = nameInput.value.trim();
-      const commentText = commentInput.value.trim();
+      let name = sanitizeInput(nameInput.value.trim());
+      let commentText = sanitizeInput(commentInput.value.trim());
   
       if (name === "" || commentText === "") {
         alert("Введите имя и комментарий!");
