@@ -1,11 +1,13 @@
 // рендер комментов
-import { comments } from './state.js'
+import { getComments } from './state.js'
 import { stripHTMLTags } from './api.js'
 import { setLikeHandlers, setReplyHandlers } from './handlers.js'
 
 export function renderComments() {
     const commentsList = document.querySelector('.comments')
     commentsList.innerHTML = ''
+
+    const comments = getComments()
 
     comments.forEach((comment, index) => {
         const commentElement = document.createElement('li')
