@@ -1,8 +1,9 @@
 // лайки+цитаты
-import { comments } from './state.js'
+import { getComments } from './state.js'
 import { renderComments } from './render.js'
 
 export function setLikeHandlers() {
+    const comments = getComments()
     document.querySelectorAll('.like-button').forEach((button) => {
         button.addEventListener('click', (event) => {
             event.stopPropagation()
@@ -15,6 +16,7 @@ export function setLikeHandlers() {
 }
 
 export function setReplyHandlers() {
+    const comments = getComments()
     document.querySelectorAll('.comment').forEach((commentElement, index) => {
         commentElement.addEventListener('click', (event) => {
             if (!event.target.classList.contains('like-button')) {
