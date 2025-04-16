@@ -1,3 +1,7 @@
+* {
+    outline: 1px solid red;
+}
+
 body {
     margin: 0;
 }
@@ -22,12 +26,22 @@ body {
     text-align: center;
 }
 
-.adding-text {
+.adding-text,
+.loading-text {
+    margin-top: 30px;
     font-size: 18px;
-    color: #ffffff;
-    margin-top: 24px;
-    margin-bottom: 24px;
+    color: white;
     text-align: center;
+    padding: 20px;
+    width: 596px;
+    box-sizing: border-box;
+    background: radial-gradient(
+        75.42% 75.42% at 50% 42.37%,
+        rgba(53, 53, 53, 0) 22.92%,
+        #7334ea 100%
+    );
+    border-radius: 20px;
+    filter: drop-shadow(0px 20px 67px rgba(0, 0, 0, 0.08));
 }
 
 .comments,
@@ -150,4 +164,11 @@ body {
 
 .add-form-button:hover {
     opacity: 0.9;
+}
+
+.form-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    position: relative;
 }
