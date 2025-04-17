@@ -19,7 +19,7 @@ export function renderComments() {
         <div>${comment.date}</div>
       </div>
       <div class="comment-body">
-        <div class="comment-text">${comment.text}</div>
+        <div class="comment-text">${stripHTMLTags(comment.text)}</div>
       </div>
       <div class="comment-footer">
         <div class="likes">

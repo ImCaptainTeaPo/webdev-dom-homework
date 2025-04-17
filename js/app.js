@@ -19,7 +19,7 @@ function showAdding() {
 
 function hideAdding() {
     document.querySelector('.adding-text').style.display = 'none'
-    document.querySelector('.add-form').style.display = 'block'
+    document.querySelector('.add-form').style.display = 'flex'
 }
 
 function loadAndRenderComments() {
