@@ -5,17 +5,25 @@ import {
     fetchComments,
     postComment,
 } from './api.js'
-
-import { addComment, setComments } from './state.js'
+import { setComments } from './state.js'
 import { renderComments } from './render.js'
 
-export function initApp() {
-    const nameInput = document.querySelector('.add-form-name')
-    const commentInput = document.querySelector('.add-form-text')
-    const addButton = document.querySelector('.add-form-button')
+function hideLoading() {
+    document.querySelector('.loading-text').style.display = 'none'
+}
 
-    // 1. Загружаем комментарии при старте
-    fetchComments()
+function showAdding() {
+    document.querySelector('.adding-text').style.display = 'block'
+    document.querySelector('.add-form').style.display = 'none'
+}
+
+function hideAdding() {
+    document.querySelector('.adding-text').style.display = 'none'
+    document.querySelector('.add-form').style.display = 'flex'
+}
+
+function loadAndRenderComments() {
+    return fetchComments()
         .then((loadedComments) => {
             setComments(loadedComments)
             renderComments()
@@ -23,8 +31,18 @@ export function initApp() {
         .catch((error) => {
             alert('Не удалось загрузить комментарии: ' + error.message)
         })
+        .finally(() => {
+            hideLoading()
+        })
+}
 
-    // 2. Обработка добавления нового комментария
+export function initApp() {
+    const nameInput = document.querySelector('.add-form-name')
+    const commentInput = document.querySelector('.add-form-text')
+    const addButton = document.querySelector('.add-form-button')
+
+    loadAndRenderComments()
+
     addButton.addEventListener('click', () => {
         const name = stripHTMLTags(nameInput.value.trim())
         const text = commentInput.value.trim()
@@ -34,18 +52,19 @@ export function initApp() {
             return
         }
 
+        showAdding()
+
         postComment({ name, text })
+            .then(() => loadAndRenderComments())
             .then(() => {
-                return fetchComments()
-            })
-            .then((loadedComments) => {
-                setComments(loadedComments)
-                renderComments()
                 nameInput.value = ''
                 commentInput.value = ''
             })
             .catch((error) => {
                 alert('Ошибка при добавлении комментария: ' + error.message)
+            })
+            .finally(() => {
+                hideAdding()
             })
     })
 }
