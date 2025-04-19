@@ -29,7 +29,7 @@ function loadAndRenderComments() {
             renderComments()
         })
         .catch((error) => {
-            alert('Не удалось загрузить комментарии: ' + error.message)
+            alert(error.message)
         })
         .finally(() => {
             hideLoading()
@@ -48,7 +48,7 @@ export function initApp() {
         const text = commentInput.value.trim()
 
         if (name.length < 3 || text.length < 3) {
-            alert('Имя и комментарий должны содержать хотя бы 3 символа!')
+            alert('Имя и комментарий должны быть не короче 3 символов')
             return
         }
 
@@ -61,7 +61,7 @@ export function initApp() {
                 commentInput.value = ''
             })
             .catch((error) => {
-                alert('Ошибка при добавлении комментария: ' + error.message)
+                alert(error.message)
             })
             .finally(() => {
                 hideAdding()
