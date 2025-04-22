@@ -5,7 +5,7 @@ import {
     fetchComments,
     postComment,
 } from './api.js'
-import { setComments } from './state.js'
+import { setComments, getUserName } from './state.js'
 import { renderComments } from './render.js'
 
 function hideLoading() {
@@ -36,16 +36,19 @@ function loadAndRenderComments() {
         })
 }
 
-export function initApp() {
+function initApp() {
     const nameInput = document.querySelector('.add-form-name')
     const commentInput = document.querySelector('.add-form-text')
     const addButton = document.querySelector('.add-form-button')
 
+    nameInput.value = getUserName()
+    nameInput.setAttribute('readonly', true)
+
     loadAndRenderComments()
 
     addButton.addEventListener('click', () => {
-        const name = stripHTMLTags(nameInput.value.trim())
         const text = commentInput.value.trim()
+        const name = getUserName()
 
         if (name.length < 3 || text.length < 3) {
             alert('Имя и комментарий должны быть не короче 3 символов')
@@ -57,7 +60,6 @@ export function initApp() {
         postComment({ name, text })
             .then(() => loadAndRenderComments())
             .then(() => {
-                nameInput.value = ''
                 commentInput.value = ''
             })
             .catch((error) => {
@@ -68,3 +70,5 @@ export function initApp() {
             })
     })
 }
+
+export { initApp, hideLoading }
