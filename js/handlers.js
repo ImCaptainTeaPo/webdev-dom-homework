@@ -1,10 +1,14 @@
 // лайки+цитаты
-import { getComments } from './state.js'
+import { getComments, getToken } from './state.js'
 import { renderComments } from './render.js'
 
 export function setLikeHandlers() {
     const comments = getComments()
+    const isAuthorized = !!getToken()
+
     document.querySelectorAll('.like-button').forEach((button) => {
+        if (!isAuthorized) return
+
         button.addEventListener('click', (event) => {
             event.stopPropagation()
             const index = button.getAttribute('data-index')
