@@ -12,6 +12,20 @@
 
             <ul class="comments"></ul>
 
+            <!-- для неавторизованных -->
+            <div class="unauthorized" style="display: none">
+                <p>
+                    Чтобы добавить комментарий,
+                    <a href="#" class="auth-link">авторизуйтесь</a>.
+                </p>
+            </div>
+
+            <!-- для логина -->
+            <div class="login-section" style="display: none">
+                <!-- форма логина будет рендериться динамически -->
+            </div>
+
+            <!-- для формы коммента -->
             <div class="form-wrapper">
                 <div class="adding-text" style="display: none">
                     Комментарий добавляется...
@@ -22,6 +36,7 @@
                         type="text"
                         class="add-form-name"
                         placeholder="Введите ваше имя"
+                        readonly
                     />
                     <textarea
                         class="add-form-text"

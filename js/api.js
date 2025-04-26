@@ -1,5 +1,8 @@
 // дата и очистка тегов
-const API_URL = 'https://wedev-api.sky.pro/api/v1/golovin-semen/comments'
+const API_URL = 'https://wedev-api.sky.pro/api/v2/golovin-semen/comments'
+const LOGIN_URL = 'https://wedev-api.sky.pro/api/user/login'
+
+import { getToken } from './state.js'
 
 export async function fetchComments() {
     try {
@@ -28,11 +31,17 @@ export async function fetchComments() {
     }
 }
 
-export async function postComment({ name, text }) {
+export async function postComment({ text }) {
     try {
         const response = await fetch(API_URL, {
             method: 'POST',
-            body: JSON.stringify({ name, text, forceError: true }),
+            headers: {
+                Authorization: `Bearer ${getToken()}`,
+            },
+            body: JSON.stringify({
+                text,
+                forceError: true,
+            }),
         })
 
         if (response.status === 400) {
@@ -48,6 +57,39 @@ export async function postComment({ name, text }) {
         }
 
         return response.json()
+    } catch (error) {
+        if (error.name === 'TypeError') {
+            throw new Error(
+                'Кажется, у вас сломался интернет, попробуйте позже',
+            )
+        }
+        throw error
+    }
+}
+
+export async function loginUser({ login, password }) {
+    try {
+        const response = await fetch(
+            'https://wedev-api.sky.pro/api/user/login',
+            {
+                method: 'POST',
+                body: JSON.stringify({ login, password }),
+            },
+        )
+
+        if (response.status === 400) {
+            throw new Error('Неверный логин или пароль')
+        }
+
+        if (!response.ok) {
+            throw new Error('Ошибка входа')
+        }
+
+        const data = await response.json()
+        return {
+            token: data.user.token,
+            name: data.user.name,
+        }
     } catch (error) {
         if (error.name === 'TypeError') {
             throw new Error(
